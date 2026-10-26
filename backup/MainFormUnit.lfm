@@ -16,7 +16,7 @@ object MainForm: TMainForm
   OnCreate = FormCreate
   object ToolBar: TToolBar
     Left = 0
-    Height = 45
+    Height = 40
     Top = 0
     Width = 1085
     ButtonHeight = 40
@@ -124,8 +124,8 @@ object MainForm: TMainForm
   end
   object TabControl: TPageControl
     Left = 0
-    Height = 578
-    Top = 45
+    Height = 583
+    Top = 40
     Width = 1085
     Align = alClient
     TabOrder = 1

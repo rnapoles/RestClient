@@ -76,9 +76,6 @@ type
     
     procedure TreeViewGetText(Sender: TBaseVirtualTree; Node: PVirtualNode;
       Column: TColumnIndex; TextType: TVSTTextType; var CellText: String);
-    procedure TreeViewGetImageIndex(Sender: TBaseVirtualTree; Node: PVirtualNode;
-      Kind: TVTImageKind; Column: TColumnIndex; var Ghosted: Boolean;
-      var ImageIndex: Integer);
     procedure TreeViewChange(Sender: TBaseVirtualTree; Node: PVirtualNode);
     procedure TreeViewDblClick(Sender: TObject);
     procedure TreeViewInitNode(Sender: TBaseVirtualTree; ParentNode, Node: PVirtualNode;
@@ -140,9 +137,9 @@ type
   TTreeNodeData = record
     NodeType: Integer; // 0=root, 1=variable, 2=endpoint, 3=error
     Index: Integer;    // index in Variables or Endpoints array
-    Endpoint: TEndpoint;
-    Variable: TVariable;
-    Error: THttpParseError;
+    Endpoint: TEndpoint;    // Deprecated - do not use, may be stale pointer
+    Variable: TVariable;    // Deprecated - do not use, may be stale pointer
+    Error: THttpParseError; // Deprecated - do not use, may be stale pointer
   end;
 
 implementation
@@ -667,14 +664,53 @@ procedure THttpWorkspace.TreeViewInitNode(Sender: TBaseVirtualTree;
   ParentNode, Node: PVirtualNode; var InitialStates: TVirtualNodeInitStates);
 var
   Data: PTreeNodeData;
+  ParentData: PTreeNodeData;
+  NodeIndex: Integer;
 begin
   Data := Sender.GetNodeData(Node);
+  
+  if not Assigned(Data) then
+    Exit;
+  
+  // Initialize to safe defaults - DO NOT store pointers, only indices
+  Data^.NodeType := 0;
+  Data^.Index := -1;
+  Data^.Endpoint := nil;
+  Data^.Variable := nil;
+  Data^.Error := nil;
+  
   if ParentNode = nil then
   begin
     // Root node
-    Data^.NodeType := 0;
-    Data^.Index := 0;
     Include(InitialStates, ivsHasChildren);
+  end
+  else
+  begin
+    // Child of root - determine if endpoint or error
+    ParentData := Sender.GetNodeData(ParentNode);
+    
+    if not Assigned(ParentData) or not Assigned(FParser) or not Assigned(FParser.HttpFile) then
+      Exit;
+    
+    if ParentData^.NodeType = 0 then // Parent is root
+    begin
+      NodeIndex := Node^.Index;
+      
+      if NodeIndex < Length(FParser.HttpFile.Endpoints) then
+      begin
+        // This is an endpoint node - store INDEX only, not pointer
+        Data^.NodeType := 2;
+        Data^.Index := NodeIndex;
+        // DO NOT store pointer: Data^.Endpoint := FParser.HttpFile.Endpoints[NodeIndex];
+      end
+      else
+      begin
+        // This is an error node - store INDEX only, not pointer
+        Data^.NodeType := 3;
+        Data^.Index := NodeIndex - Length(FParser.HttpFile.Endpoints);
+        // DO NOT store pointer: Data^.Error := FParser.Errors[Data^.Index];
+      end;
+    end;
   end;
 end;
 
@@ -682,48 +718,23 @@ procedure THttpWorkspace.TreeViewInitChildren(Sender: TBaseVirtualTree;
   Node: PVirtualNode; var ChildCount: Cardinal);
 var
   Data: PTreeNodeData;
-  I, J: Integer;
-  ChildNode: PVirtualNode;
-  ChildData: PTreeNodeData;
 begin
-  if not Assigned(FParser) then
-  begin
-    ChildCount := 0;
-    Exit;
-  end;
+  ChildCount := 0;
   
+  if not Assigned(Node) then
+    Exit;
+    
   Data := Sender.GetNodeData(Node);
+  
+  if not Assigned(Data) or not Assigned(FParser) or not Assigned(FParser.HttpFile) then
+    Exit;
   
   if Data^.NodeType = 0 then // Root node
   begin
-    // Count: endpoints + errors (variables are less important for now)
+    // Just set count - child nodes will be initialized by InitNode
     ChildCount := Length(FParser.HttpFile.Endpoints);
     if FParser.Errors.ErrorCount > 0 then
       ChildCount := ChildCount + Cardinal(FParser.Errors.ErrorCount);
-      
-    // Initialize child nodes
-    for I := 0 to Length(FParser.HttpFile.Endpoints) - 1 do
-    begin
-      ChildNode := Sender.GetFirstChild(Node);
-      for J := 0 to I - 1 do
-        ChildNode := Sender.GetNextSibling(ChildNode);
-      if ChildNode = nil then
-        ChildNode := Sender.AddChild(Node);
-      ChildData := Sender.GetNodeData(ChildNode);
-      ChildData^.NodeType := 2; // Endpoint
-      ChildData^.Index := I;
-      ChildData^.Endpoint := FParser.HttpFile.Endpoints[I];
-    end;
-    
-    // Add error nodes
-    for I := 0 to FParser.Errors.ErrorCount - 1 do
-    begin
-      ChildNode := Sender.AddChild(Node);
-      ChildData := Sender.GetNodeData(ChildNode);
-      ChildData^.NodeType := 3; // Error
-      ChildData^.Index := I;
-      ChildData^.Error := FParser.Errors[I];
-    end;
   end;
 end;
 
@@ -736,7 +747,14 @@ var
   Err: THttpParseError;
   UrlShort: string;
 begin
+  CellText := '';
+  
+  if Node = nil then
+    Exit;
+    
   Data := Sender.GetNodeData(Node);
+  if Data = nil then
+    Exit;
   
   case Data^.NodeType of
     0: // Root
@@ -746,9 +764,28 @@ begin
         CellText := '@' + Data^.Variable.Name + ' = ' + Data^.Variable.Value;
     2: // Endpoint
       begin
-        Endpoint := Data^.Endpoint;
-        if Assigned(Endpoint) then
+        // Safety check: verify parser and endpoint array are valid
+        if not Assigned(FParser) or not Assigned(FParser.HttpFile) then
         begin
+          CellText := '<Parser not initialized>';
+          Exit;
+        end;
+        
+        if (Data^.Index < 0) or (Data^.Index >= Length(FParser.HttpFile.Endpoints)) then
+        begin
+          CellText := '<Invalid endpoint index>';
+          Exit;
+        end;
+        
+        // Get fresh endpoint reference from parser (not from cached pointer)
+        Endpoint := FParser.HttpFile.Endpoints[Data^.Index];
+        if not Assigned(Endpoint) then
+        begin
+          CellText := '<Endpoint not found>';
+          Exit;
+        end;
+        
+        try
           UrlShort := Endpoint.Url;
           if Length(UrlShort) > 50 then
             UrlShort := Copy(UrlShort, 1, 47) + '...';
@@ -757,43 +794,66 @@ begin
             CellText := Format('%s  %s %s', [Endpoint.Name, Endpoint.Verb, UrlShort])
           else
             CellText := Format('%s %s', [Endpoint.Verb, UrlShort]);
+        except
+          on E: Exception do
+            CellText := '<' + e.ClassName + ':' + e.Message + '>' ;
         end;
       end;
     3: // Error
       begin
-        Err := Data^.Error;
+        if not Assigned(FParser) or not Assigned(FParser.Errors) then
+        begin
+          CellText := '<Parser errors not available>';
+          Exit;
+        end;
+        
+        if (Data^.Index < 0) or (Data^.Index >= FParser.Errors.Count) then
+        begin
+          CellText := '<Invalid error index>';
+          Exit;
+        end;
+        
+        Err := FParser.Errors[Data^.Index];
         CellText := Format('[Line %d] %s', [Err.Row, Err.Message]);
       end;
   end;
 end;
 
-procedure THttpWorkspace.TreeViewGetImageIndex(Sender: TBaseVirtualTree; Node: PVirtualNode;
-      Kind: TVTImageKind; Column: TColumnIndex; var Ghosted: Boolean;
-      var ImageIndex: Integer)
-begin
-
-end;
-
 procedure THttpWorkspace.TreeViewChange(Sender: TBaseVirtualTree; Node: PVirtualNode);
 var
   Data: PTreeNodeData;
+  Endpoint: TEndpoint;
 begin
   if Node = nil then
     Exit;
     
   Data := Sender.GetNodeData(Node);
+  if not Assigned(Data) then
+    Exit;
   
   if Data^.NodeType = 2 then // Endpoint
   begin
     FCurrentEndpointIndex := Data^.Index;
-    if Assigned(Data^.Endpoint) then
-      NavigateToLine(Data^.Endpoint.Row);
+    
+    // Get endpoint from parser using index, not from cached pointer
+    if Assigned(FParser) and Assigned(FParser.HttpFile) and
+       (Data^.Index >= 0) and (Data^.Index < Length(FParser.HttpFile.Endpoints)) then
+    begin
+      Endpoint := FParser.HttpFile.Endpoints[Data^.Index];
+      if Assigned(Endpoint) then
+        NavigateToLine(Endpoint.Row);
+    end;
+    
     if Assigned(FOnStatusChanged) then
       FOnStatusChanged(Self);
   end
   else if Data^.NodeType = 3 then // Error
   begin
-    NavigateToLine(Data^.Error.Row);
+    if Assigned(FParser) and Assigned(FParser.Errors) and
+       (Data^.Index >= 0) and (Data^.Index < FParser.Errors.Count) then
+    begin
+      NavigateToLine(FParser.Errors[Data^.Index].Row);
+    end;
   end;
 end;
 
@@ -805,10 +865,12 @@ begin
   Node := FTreeView.FocusedNode;
   if Node = nil then
     Exit;
-    
+
+  {
   Data := FTreeView.GetNodeData(Node);
   if Data^.NodeType = 2 then // Endpoint
     ExecuteCurrentRequest;
+  }
 end;
 
 procedure THttpWorkspace.EditorChange(Sender: TObject);

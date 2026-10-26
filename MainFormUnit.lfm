@@ -1,10 +1,10 @@
 object MainForm: TMainForm
-  Left = 309
-  Height = 652
-  Top = 199
+  Left = 334
+  Height = 648
+  Top = 120
   Width = 1085
   Caption = 'HTTP File Client'
-  ClientHeight = 652
+  ClientHeight = 648
   ClientWidth = 1085
   Color = 2434085
   DesignTimePPI = 120
@@ -124,7 +124,7 @@ object MainForm: TMainForm
   end
   object TabControl: TPageControl
     Left = 0
-    Height = 583
+    Height = 579
     Top = 40
     Width = 1085
     Align = alClient
@@ -134,7 +134,7 @@ object MainForm: TMainForm
   object StatusBar: TStatusBar
     Left = 0
     Height = 29
-    Top = 623
+    Top = 619
     Width = 1085
     Panels = <>
     SimplePanel = False
