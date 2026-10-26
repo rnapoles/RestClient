@@ -11,7 +11,7 @@ GET {{baseUrl}}/posts/{{userId}}
 Accept: application/json
 
 ### Get Post Comments
-GET {{baseUrl}}/posts/{{getPost.response.body.$.id}}/comments
+GET {{baseUrl}}/posts/{{getPost.response.body.$[0].id}}/comments
 Accept: application/json
 
 ### Create New Post

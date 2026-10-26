@@ -20,7 +20,7 @@
         <ComponentName Value="MainForm"/>
         <HasResources Value="True"/>
         <ResourceBaseClass Value="Form"/>
-        <EditorIndex Value="4"/>
+        <EditorIndex Value="5"/>
         <TopLine Value="219"/>
         <CursorPos X="19" Y="222"/>
         <UsageCount Value="23"/>
@@ -30,11 +30,15 @@
       <Unit>
         <Filename Value="HttpWorkspace.pas"/>
         <IsPartOfProject Value="True"/>
-        <IsVisibleTab Value="True"/>
-        <TopLine Value="817"/>
-        <CursorPos X="33" Y="827"/>
+        <TopLine Value="799"/>
+        <CursorPos X="18" Y="809"/>
         <UsageCount Value="23"/>
         <Loaded Value="True"/>
+      </Unit>
+      <Unit>
+        <Filename Value="SynHighlighterHttp.pas"/>
+        <IsPartOfProject Value="True"/>
+        <UsageCount Value="20"/>
       </Unit>
       <Unit>
         <Filename Value="mainform.pas"/>
@@ -56,7 +60,7 @@
       <Unit>
         <Filename Value="C:\lazarus\components\virtualtreeview\laz.virtualtrees.pas"/>
         <UnitName Value="laz.VirtualTrees"/>
-        <EditorIndex Value="3"/>
+        <EditorIndex Value="4"/>
         <TopLine Value="20568"/>
         <CursorPos X="16" Y="20579"/>
         <UsageCount Value="12"/>
@@ -64,7 +68,7 @@
       </Unit>
       <Unit>
         <Filename Value="libs\CurlRequestExecutor.pas"/>
-        <EditorIndex Value="2"/>
+        <EditorIndex Value="3"/>
         <TopLine Value="161"/>
         <CursorPos Y="178"/>
         <UsageCount Value="11"/>
@@ -72,22 +76,23 @@
       </Unit>
       <Unit>
         <Filename Value="libs\HttpFileAST.pas"/>
-        <EditorIndex Value="1"/>
+        <EditorIndex Value="2"/>
         <TopLine Value="42"/>
         <CursorPos X="21" Y="54"/>
         <UsageCount Value="11"/>
         <Loaded Value="True"/>
       </Unit>
+      <Unit>
+        <Filename Value="libs\HttpFileExecutor.pas"/>
+        <IsVisibleTab Value="True"/>
+        <EditorIndex Value="1"/>
+        <TopLine Value="172"/>
+        <CursorPos X="31" Y="180"/>
+        <UsageCount Value="10"/>
+        <Loaded Value="True"/>
+      </Unit>
     </Units>
     <JumpHistory HistoryIndex="29">
-      <Position>
-        <Filename Value="HttpWorkspace.pas"/>
-        <Caret Line="279" Column="12" TopLine="266"/>
-      </Position>
-      <Position>
-        <Filename Value="HttpWorkspace.pas"/>
-        <Caret Line="280" Column="12" TopLine="266"/>
-      </Position>
       <Position>
         <Filename Value="HttpWorkspace.pas"/>
         <Caret Line="649" Column="12" TopLine="649"/>
@@ -199,6 +204,14 @@
       <Position>
         <Filename Value="HttpWorkspace.pas"/>
         <Caret Line="557" Column="47" TopLine="547"/>
+      </Position>
+      <Position>
+        <Filename Value="HttpWorkspace.pas"/>
+        <Caret Line="827" Column="33" TopLine="817"/>
+      </Position>
+      <Position>
+        <Filename Value="HttpWorkspace.pas"/>
+        <Caret Line="809" Column="18" TopLine="799"/>
       </Position>
     </JumpHistory>
     <RunParams>

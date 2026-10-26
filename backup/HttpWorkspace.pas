@@ -6,7 +6,7 @@ interface
 
 uses
   Classes, SysUtils, Controls, ExtCtrls, ComCtrls, laz.VirtualTrees, SynEdit,
-  SynEditHighlighter, SynHighlighterAny, Graphics, Forms, StdCtrls, Buttons,
+  SynEditHighlighter, SynHighlighterHttp, Graphics, Forms, StdCtrls, Buttons,
   Menus, Dialogs,
   HttpFileParser, HttpFileAST, HttpFileExecutor, CurlRequestExecutor,
   HttpFileResponses;
@@ -43,7 +43,7 @@ type
     FEditorHeader: TPanel;
     FEditorLabel: TLabel;
     FEditor: TSynEdit;
-    FHighlighter: TSynAnySyn;
+    FHighlighter: TSynHttpSyn;
     
     // Right: Inspector
     FInspectorPanel: TPanel;
@@ -137,9 +137,9 @@ type
   TTreeNodeData = record
     NodeType: Integer; // 0=root, 1=variable, 2=endpoint, 3=error
     Index: Integer;    // index in Variables or Endpoints array
-    Endpoint: TEndpoint;    // Deprecated - do not use, may be stale pointer
-    Variable: TVariable;    // Deprecated - do not use, may be stale pointer
-    Error: THttpParseError; // Deprecated - do not use, may be stale pointer
+    Endpoint: TEndpoint;
+    Variable: TVariable;
+    Error: THttpParseError;
   end;
 
 implementation
@@ -313,9 +313,9 @@ begin
   FEditor.OnChange := @EditorChange;
   FEditor.OnStatusChange := @EditorStatusChange;
   
-  // Simple highlighter
-  FHighlighter := TSynAnySyn.Create(Self);
-  FEditor.Highlighter := FHighlighter;
+  // HTTP file syntax highlighter
+  FHighlighter := TSynHttpSyn.Create(Self);
+  //FEditor.Highlighter := FHighlighter;
 end;
 
 procedure THttpWorkspace.SetupInspector;
@@ -672,12 +672,11 @@ begin
   if not Assigned(Data) then
     Exit;
   
-  // Initialize to safe defaults - DO NOT store pointers, only indices
+  // Initialize to safe defaults
   Data^.NodeType := 0;
-  Data^.Index := -1;
+  Data^.Index := 0;
   Data^.Endpoint := nil;
   Data^.Variable := nil;
-  Data^.Error := nil;
   
   if ParentNode = nil then
   begin
@@ -698,17 +697,18 @@ begin
       
       if NodeIndex < Length(FParser.HttpFile.Endpoints) then
       begin
-        // This is an endpoint node - store INDEX only, not pointer
+        // This is an endpoint node
         Data^.NodeType := 2;
         Data^.Index := NodeIndex;
-        // DO NOT store pointer: Data^.Endpoint := FParser.HttpFile.Endpoints[NodeIndex];
+        Data^.Endpoint := FParser.HttpFile.Endpoints[NodeIndex];
       end
       else
       begin
-        // This is an error node - store INDEX only, not pointer
+        // This is an error node
         Data^.NodeType := 3;
         Data^.Index := NodeIndex - Length(FParser.HttpFile.Endpoints);
-        // DO NOT store pointer: Data^.Error := FParser.Errors[Data^.Index];
+        if Data^.Index < FParser.Errors.Count then
+          Data^.Error := FParser.Errors[Data^.Index];
       end;
     end;
   end;
@@ -764,6 +764,14 @@ begin
         CellText := '@' + Data^.Variable.Name + ' = ' + Data^.Variable.Value;
     2: // Endpoint
       begin
+        // CRITICAL: Don't access parser during execution
+        // The executor calls FParser.Parse() which invalidates all endpoints
+        if FIsExecuting then
+        begin
+          CellText := '<Executing...>';
+          Exit;
+        end;
+        
         // Safety check: verify parser and endpoint array are valid
         if not Assigned(FParser) or not Assigned(FParser.HttpFile) then
         begin
@@ -777,7 +785,7 @@ begin
           Exit;
         end;
         
-        // Get fresh endpoint reference from parser (not from cached pointer)
+        // Get fresh endpoint reference from parser using INDEX (not from cached pointer)
         Endpoint := FParser.HttpFile.Endpoints[Data^.Index];
         if not Assigned(Endpoint) then
         begin
@@ -796,7 +804,7 @@ begin
             CellText := Format('%s %s', [Endpoint.Verb, UrlShort]);
         except
           on E: Exception do
-            CellText := '<' + e.ClassName + ':' + e.Message + '>' ;
+          CellText := '<' + e.ClassName + ':' + e.Message + '>' ;
         end;
       end;
     3: // Error
@@ -836,7 +844,7 @@ begin
     FCurrentEndpointIndex := Data^.Index;
     
     // Get endpoint from parser using index, not from cached pointer
-    if Assigned(FParser) and Assigned(FParser.HttpFile) and
+    if not FIsExecuting and Assigned(FParser) and Assigned(FParser.HttpFile) and
        (Data^.Index >= 0) and (Data^.Index < Length(FParser.HttpFile.Endpoints)) then
     begin
       Endpoint := FParser.HttpFile.Endpoints[Data^.Index];
@@ -849,7 +857,7 @@ begin
   end
   else if Data^.NodeType = 3 then // Error
   begin
-    if Assigned(FParser) and Assigned(FParser.Errors) and
+    if not FIsExecuting and Assigned(FParser) and Assigned(FParser.Errors) and
        (Data^.Index >= 0) and (Data^.Index < FParser.Errors.Count) then
     begin
       NavigateToLine(FParser.Errors[Data^.Index].Row);
@@ -865,12 +873,10 @@ begin
   Node := FTreeView.FocusedNode;
   if Node = nil then
     Exit;
-
-  {
+    
   Data := FTreeView.GetNodeData(Node);
   if Data^.NodeType = 2 then // Endpoint
     ExecuteCurrentRequest;
-  }
 end;
 
 procedure THttpWorkspace.EditorChange(Sender: TObject);

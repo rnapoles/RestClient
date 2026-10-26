@@ -6,7 +6,7 @@ interface
 
 uses
   Classes, SysUtils, Controls, ExtCtrls, ComCtrls, laz.VirtualTrees, SynEdit,
-  SynEditHighlighter, SynHighlighterAny, Graphics, Forms, StdCtrls, Buttons,
+  SynEditHighlighter, SynHighlighterHttp, Graphics, Forms, StdCtrls, Buttons,
   Menus, Dialogs,
   HttpFileParser, HttpFileAST, HttpFileExecutor, CurlRequestExecutor,
   HttpFileResponses;
@@ -43,7 +43,7 @@ type
     FEditorHeader: TPanel;
     FEditorLabel: TLabel;
     FEditor: TSynEdit;
-    FHighlighter: TSynAnySyn;
+    FHighlighter: TSynHttpSyn;
     
     // Right: Inspector
     FInspectorPanel: TPanel;
@@ -313,8 +313,8 @@ begin
   FEditor.OnChange := @EditorChange;
   FEditor.OnStatusChange := @EditorStatusChange;
   
-  // Simple highlighter
-  FHighlighter := TSynAnySyn.Create(Self);
+  // HTTP file syntax highlighter
+  FHighlighter := TSynHttpSyn.Create(Self);
   FEditor.Highlighter := FHighlighter;
 end;
 
