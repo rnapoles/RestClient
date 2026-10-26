@@ -721,7 +721,12 @@ end;
 procedure TSynHttpSyn.ScanCloseBrace;
 begin
   if TopCodeFoldBlockType = HTTP_BLOCK_BRACE then
-    EndCodeFoldBlock
+  begin
+    EndCodeFoldBlock;
+    fTokenID := tkBrace;
+    Inc(Run);
+    Exit;
+  end
   else if (TopCodeFoldBlockType <> nil) and (TopCodeFoldBlockType <> HTTP_BLOCK_REQUEST) then
   begin
     EndCodeFoldBlock;
@@ -743,7 +748,12 @@ end;
 procedure TSynHttpSyn.ScanCloseBracket;
 begin
   if TopCodeFoldBlockType = HTTP_BLOCK_BRACKET then
-    EndCodeFoldBlock
+  begin
+    EndCodeFoldBlock;
+    fTokenID := tkBrace;
+    Inc(Run);
+    Exit;
+  end
   else if (TopCodeFoldBlockType <> nil) and (TopCodeFoldBlockType <> HTTP_BLOCK_REQUEST) then
   begin
     EndCodeFoldBlock;
@@ -878,6 +888,11 @@ begin
   end
   else if (fLine[Run] = '{') and (Run + 1 < fLineLen) and (fLine[Run + 1] = '{') then
     ScanInterpolation
+  else if fLine[Run] in ['{', '}'] then
+  begin
+    Inc(Run);
+    fTokenID := tkSymbol;
+  end
   else if fLine[Run] in ['"', ''''] then
     ScanBodyString
   else if (fLine[Run] in ['0'..'9', '-']) and
@@ -893,7 +908,9 @@ begin
   end
   else
   begin
-    while (Run < fLineLen) and not (fLine[Run] in [' ', #9, '{']) do
+    while (Run < fLineLen) and not (fLine[Run] in [' ', #9, '{', '}']) do
+      Inc(Run);
+    if Run = fTokenPos then
       Inc(Run);
     fTokenID := tkString;
   end;
@@ -908,6 +925,14 @@ begin
   if (fLine[Run] = '{') and (Run + 1 < fLineLen) and (fLine[Run + 1] = '{') then
   begin
     ScanInterpolation;
+    Exit;
+  end;
+
+  // Single brace in request line
+  if fLine[Run] in ['{', '}'] then
+  begin
+    Inc(Run);
+    fTokenID := tkSymbol;
     Exit;
   end;
 
@@ -928,7 +953,9 @@ begin
 
   // 3. Scan a word segment
   Start := Run;
-  while (Run < fLineLen) and not (fLine[Run] in [' ', #9, '?', '&', '=', '{']) do
+  while (Run < fLineLen) and not (fLine[Run] in [' ', #9, '?', '&', '=', '{', '}']) do
+    Inc(Run);
+  if Run = Start then
     Inc(Run);
   SetString(Word, fLine + Start, Run - Start);
 
@@ -972,10 +999,17 @@ begin
   end
   else if (fLine[Run] = '{') and (Run + 1 < fLineLen) and (fLine[Run + 1] = '{') then
     ScanInterpolation
+  else if fLine[Run] in ['{', '}'] then
+  begin
+    Inc(Run);
+    fTokenID := tkSymbol;
+  end
   else
   begin
     Start := Run;
-    while (Run < fLineLen) and not (fLine[Run] in [' ', #9, '&', '=', '{']) do
+    while (Run < fLineLen) and not (fLine[Run] in [' ', #9, '&', '=', '{', '}']) do
+      Inc(Run);
+    if Run = Start then
       Inc(Run);
     if (Start > 0) and (fLine[Start - 1] = '=') then
       fTokenID := tkUrl
@@ -996,6 +1030,8 @@ begin
     // Header name
     while (Run < fLineLen) and (fLine[Run] <> ':') and not (fLine[Run] in [' ', #9]) do
       Inc(Run);
+    if Run = fTokenPos then
+      Inc(Run);
     fTokenID := tkHeaderName;
     Exit;
   end;
@@ -1007,12 +1043,19 @@ begin
     Exit;
   end;
 
-  // Header value segment: handle {{...}} interpolation or text
+  // Header value segment: handle {{...}} interpolation, single brace, or text
   if (fLine[Run] = '{') and (Run + 1 < fLineLen) and (fLine[Run + 1] = '{') then
     ScanInterpolation
+  else if fLine[Run] in ['{', '}'] then
+  begin
+    Inc(Run);
+    fTokenID := tkSymbol;
+  end
   else
   begin
-    while (Run < fLineLen) and not ((fLine[Run] = '{') and (Run + 1 < fLineLen) and (fLine[Run + 1] = '{')) do
+    while (Run < fLineLen) and not (fLine[Run] in ['{', '}']) do
+      Inc(Run);
+    if Run = fTokenPos then
       Inc(Run);
     fTokenID := tkHeaderValue;
   end;
@@ -1028,6 +1071,8 @@ begin
   else
   begin
     while (Run < fLineLen) and (fLine[Run] <> '#') do
+      Inc(Run);
+    if Run = fTokenPos then
       Inc(Run);
     fTokenID := tkFileRef;
   end;
@@ -1105,6 +1150,13 @@ begin
     lmHeader            : NextHeaderToken;
     lmFileRef           : NextFileRefToken;
     lmBody, lmBlank     : NextBodyToken;
+  end;
+
+  // Absolute safety net: ensure scanner strictly advances by at least 1 byte
+  if Run <= fTokenPos then
+  begin
+    Inc(Run);
+    fTokenID := tkInvalid;
   end;
 end;
 

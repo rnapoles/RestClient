@@ -231,6 +231,49 @@ begin
   end;
 end;
 
+procedure TestTypingSingleBraces;
+var
+  HL: TTestHttpSyn;
+  LineText, Reconstructed: string;
+  Step: Integer;
+const
+  TestCases: array[0..8] of string = (
+    '@var = {',
+    '@var = {{',
+    '@var = {{baseUrl',
+    '@var = {{baseUrl}}',
+    '@baseUrl = https://api.com/{id}',
+    'GET https://api.com/{',
+    'GET https://api.com/{{',
+    'Header: {',
+    '?filter={'
+  );
+begin
+  WriteLn('--- Testing Typing Single Braces & Partial Variables ---');
+  HL := TTestHttpSyn.Create(nil);
+  try
+    for Step := Low(TestCases) to High(TestCases) do
+    begin
+      LineText := TestCases[Step];
+      HL.ResetRange;
+      HL.SetLine(LineText, Step);
+
+      Reconstructed := '';
+      while not HL.GetEol do
+      begin
+        Reconstructed := Reconstructed + HL.GetToken;
+        HL.Next;
+      end;
+
+      AssertTrue(Reconstructed = LineText,
+        Format('Failed on single brace input "%s": got "%s"', [LineText, Reconstructed]));
+    end;
+    WriteLn('PASSED: All single-brace and partial variable typing cases completed without hanging!');
+  finally
+    HL.Free;
+  end;
+end;
+
 begin
   WriteLn('========================================');
   WriteLn(' SynHighlighterHttp Automated Test Suite ');
@@ -239,6 +282,7 @@ begin
   TestInterpolationDoesNotFold;
   TestRequestFolding;
   TestJsonBodyFolding;
+  TestTypingSingleBraces;
   WriteLn('========================================');
   WriteLn(' ALL TESTS PASSED! ');
   WriteLn('========================================');

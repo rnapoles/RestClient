@@ -723,6 +723,7 @@ begin
   if Assigned(Workspace) then
   begin
     // Re-parse before execution to ensure we have latest source
+    ShowMessage('Ok');
     Workspace.Parse;
     Workspace.ExecuteCurrentRequest;
   end;

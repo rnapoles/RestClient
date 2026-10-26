@@ -1,7 +1,9 @@
 @baseUrl = https://jsonplaceholder.typicode.com
 @userId = 1
+@firstPost = {{getAllPost.response.body.$[0].id}}
 
 ### Get All Posts
+# @name getAllPost
 GET {{baseUrl}}/posts
 Accept: application/json
 
@@ -11,7 +13,7 @@ GET {{baseUrl}}/posts/{{userId}}
 Accept: application/json
 
 ### Get Post Comments
-GET {{baseUrl}}/posts/{{getPost.response.body.$[0].id}}/comments
+GET {{baseUrl}}/posts/{{firstPost}}/comments
 Accept: application/json
 
 ### Create New Post
