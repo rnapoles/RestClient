@@ -1,0 +1,52 @@
+@baseUrl = https://jsonplaceholder.typicode.com
+@userId = 1
+
+### Get All Posts
+GET {{baseUrl}}/posts
+Accept: application/json
+
+### Get Single Post
+# @name getPost
+GET {{baseUrl}}/posts/{{userId}}
+Accept: application/json
+
+### Get Post Comments
+GET {{baseUrl}}/posts/{{getPost.response.body.$.id}}/comments
+Accept: application/json
+
+### Create New Post
+# @name createPost
+POST {{baseUrl}}/posts
+Content-Type: application/json
+
+{
+  "title": "Test Post from HTTP Client",
+  "body": "This is a test post created using the REST client",
+  "userId": {{userId}}
+}
+
+### Update Post
+PUT {{baseUrl}}/posts/1
+Content-Type: application/json
+
+{
+  "id": 1,
+  "title": "Updated Title",
+  "body": "Updated content",
+  "userId": {{userId}}
+}
+
+### Delete Post
+DELETE {{baseUrl}}/posts/1
+
+### Get Users
+GET {{baseUrl}}/users
+Accept: application/json
+
+### Get User Albums
+GET {{baseUrl}}/users/{{userId}}/albums
+Accept: application/json
+
+### Get Todos
+GET {{baseUrl}}/todos?userId={{userId}}
+Accept: application/json

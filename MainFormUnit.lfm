@@ -1,0 +1,409 @@
+object MainForm: TMainForm
+  Left = 309
+  Height = 652
+  Top = 199
+  Width = 1085
+  Caption = 'HTTP File Client'
+  ClientHeight = 652
+  ClientWidth = 1085
+  Color = 2434085
+  DesignTimePPI = 120
+  Menu = MainMenu
+  Position = poScreenCenter
+  LCLVersion = '4.8.0.0'
+  OnClose = FormClose
+  OnCloseQuery = FormCloseQuery
+  OnCreate = FormCreate
+  object ToolBar: TToolBar
+    Left = 0
+    Height = 45
+    Top = 26
+    Width = 1085
+    ButtonHeight = 40
+    ButtonWidth = 40
+    Color = 2039840
+    EdgeBorders = []
+    ParentColor = False
+    TabOrder = 0
+    object BtnNew: TToolButton
+      Left = 1
+      Top = 0
+      Action = ActFileNew
+      Caption = 'New'
+      ShowCaption = False
+    end
+    object BtnOpen: TToolButton
+      Left = 41
+      Top = 0
+      Action = ActFileOpen
+      Caption = 'Open'
+      ShowCaption = False
+    end
+    object BtnSave: TToolButton
+      Left = 81
+      Top = 0
+      Action = ActFileSave
+      Caption = 'Save'
+      ShowCaption = False
+    end
+    object BtnSep1: TToolButton
+      Left = 121
+      Height = 40
+      Top = 0
+      Caption = 'BtnSep1'
+      Style = tbsDivider
+    end
+    object BtnRun: TToolButton
+      Left = 127
+      Top = 0
+      Action = ActRequestRun
+      Caption = 'Run'
+      ShowCaption = False
+    end
+    object BtnRunAll: TToolButton
+      Left = 167
+      Top = 0
+      Action = ActRequestRunAll
+      Caption = 'Run All'
+      ShowCaption = False
+    end
+    object BtnStop: TToolButton
+      Left = 207
+      Top = 0
+      Action = ActRequestStop
+      Caption = 'Stop'
+      ShowCaption = False
+    end
+    object BtnSep2: TToolButton
+      Left = 247
+      Height = 40
+      Top = 0
+      Caption = 'BtnSep2'
+      Style = tbsDivider
+    end
+    object BtnExplorer: TToolButton
+      Left = 253
+      Top = 0
+      Action = ActViewExplorer
+      Caption = 'Explorer'
+      ShowCaption = False
+      Style = tbsCheck
+    end
+    object BtnDebug: TToolButton
+      Left = 293
+      Top = 0
+      Action = ActViewDebug
+      Caption = 'Debug'
+      ShowCaption = False
+      Style = tbsCheck
+    end
+    object BtnSep3: TToolButton
+      Left = 333
+      Height = 40
+      Top = 0
+      Caption = 'BtnSep3'
+      Style = tbsDivider
+    end
+    object BtnSettings: TToolButton
+      Left = 339
+      Top = 0
+      Action = ActToolsPrefs
+      Caption = 'Settings'
+      ShowCaption = False
+    end
+  end
+  object TabControl: TPageControl
+    Left = 0
+    Height = 552
+    Top = 71
+    Width = 1085
+    Align = alClient
+    TabOrder = 1
+    OnChange = TabControlChange
+  end
+  object StatusBar: TStatusBar
+    Left = 0
+    Height = 29
+    Top = 623
+    Width = 1085
+    Panels = <>
+    SimplePanel = False
+  end
+  object ActionList: TActionList
+    Left = 100
+    Top = 100
+    object ActFileNew: TAction
+      Caption = '&New'
+      Hint = 'New HTTP File'
+      OnExecute = ActFileNewExecute
+    end
+    object ActFileOpen: TAction
+      Caption = '&Open...'
+      Hint = 'Open HTTP File'
+      OnExecute = ActFileOpenExecute
+    end
+    object ActFileSave: TAction
+      Caption = '&Save'
+      Hint = 'Save File'
+      OnExecute = ActFileSaveExecute
+    end
+    object ActFileSaveAs: TAction
+      Caption = 'Save &As...'
+      Hint = 'Save File As'
+      OnExecute = ActFileSaveAsExecute
+    end
+    object ActFileClose: TAction
+      Caption = '&Close Tab'
+      Hint = 'Close Current Tab'
+      OnExecute = ActFileCloseExecute
+    end
+    object ActFileExit: TAction
+      Caption = 'E&xit'
+      Hint = 'Exit Application'
+      OnExecute = ActFileExitExecute
+    end
+    object ActEditUndo: TAction
+      Caption = '&Undo'
+      Hint = 'Undo'
+      OnExecute = ActEditUndoExecute
+    end
+    object ActEditRedo: TAction
+      Caption = '&Redo'
+      Hint = 'Redo'
+      OnExecute = ActEditRedoExecute
+    end
+    object ActEditCut: TAction
+      Caption = 'Cu&t'
+      Hint = 'Cut'
+      OnExecute = ActEditCutExecute
+    end
+    object ActEditCopy: TAction
+      Caption = '&Copy'
+      Hint = 'Copy'
+      OnExecute = ActEditCopyExecute
+    end
+    object ActEditPaste: TAction
+      Caption = '&Paste'
+      Hint = 'Paste'
+      OnExecute = ActEditPasteExecute
+    end
+    object ActEditFind: TAction
+      Caption = '&Find...'
+      Hint = 'Find'
+      OnExecute = ActEditFindExecute
+    end
+    object ActEditReplace: TAction
+      Caption = '&Replace...'
+      Hint = 'Replace'
+      OnExecute = ActEditReplaceExecute
+    end
+    object ActRequestRun: TAction
+      Caption = '&Run Request'
+      Hint = 'Run Current Request'
+      OnExecute = ActRequestRunExecute
+    end
+    object ActRequestRunAll: TAction
+      Caption = 'Run &All'
+      Hint = 'Run All Requests'
+      OnExecute = ActRequestRunAllExecute
+    end
+    object ActRequestStop: TAction
+      Caption = '&Stop'
+      Hint = 'Stop Execution'
+      OnExecute = ActRequestStopExecute
+    end
+    object ActRequestNext: TAction
+      Caption = '&Next Request'
+      Hint = 'Next Request'
+      OnExecute = ActRequestNextExecute
+    end
+    object ActRequestPrev: TAction
+      Caption = '&Previous Request'
+      Hint = 'Previous Request'
+      OnExecute = ActRequestPrevExecute
+    end
+    object ActViewExplorer: TAction
+      Caption = 'Request &Explorer'
+      Checked = True
+      Hint = 'Toggle Request Explorer'
+      OnExecute = ActViewExplorerExecute
+    end
+    object ActViewInspector: TAction
+      Caption = 'Response &Inspector'
+      Checked = True
+      Hint = 'Toggle Response Inspector'
+      OnExecute = ActViewInspectorExecute
+    end
+    object ActViewDebug: TAction
+      Caption = '&Debug Panel'
+      Checked = True
+      Hint = 'Toggle Debug Panel'
+      OnExecute = ActViewDebugExecute
+    end
+    object ActViewReset: TAction
+      Caption = '&Reset Layout'
+      Hint = 'Reset Layout'
+      OnExecute = ActViewResetExecute
+    end
+    object ActToolsEnv: TAction
+      Caption = '&Environment Variables...'
+      Hint = 'Environment Variables'
+      OnExecute = ActToolsEnvExecute
+    end
+    object ActToolsDiag: TAction
+      Caption = 'Parser &Diagnostics...'
+      Hint = 'Parser Diagnostics'
+      OnExecute = ActToolsDiagExecute
+    end
+    object ActToolsPrefs: TAction
+      Caption = '&Preferences...'
+      Hint = 'Preferences'
+      OnExecute = ActToolsPrefsExecute
+    end
+    object ActHelpDocs: TAction
+      Caption = '&Documentation'
+      Hint = 'Documentation'
+      OnExecute = ActHelpDocsExecute
+    end
+    object ActHelpAbout: TAction
+      Caption = '&About...'
+      Hint = 'About'
+      OnExecute = ActHelpAboutExecute
+    end
+  end
+  object MainMenu: TMainMenu
+    Left = 200
+    Top = 100
+    object MenuFile: TMenuItem
+      Caption = '&File'
+      object MenuFileNew: TMenuItem
+        Action = ActFileNew
+      end
+      object MenuFileOpen: TMenuItem
+        Action = ActFileOpen
+      end
+      object MenuFileSave: TMenuItem
+        Action = ActFileSave
+      end
+      object MenuFileSaveAs: TMenuItem
+        Action = ActFileSaveAs
+      end
+      object MenuFileSep1: TMenuItem
+        Caption = '-'
+      end
+      object MenuFileClose: TMenuItem
+        Action = ActFileClose
+      end
+      object MenuFileSep2: TMenuItem
+        Caption = '-'
+      end
+      object MenuFileExit: TMenuItem
+        Action = ActFileExit
+      end
+    end
+    object MenuEdit: TMenuItem
+      Caption = '&Edit'
+      object MenuEditUndo: TMenuItem
+        Action = ActEditUndo
+      end
+      object MenuEditRedo: TMenuItem
+        Action = ActEditRedo
+      end
+      object MenuEditSep1: TMenuItem
+        Caption = '-'
+      end
+      object MenuEditCut: TMenuItem
+        Action = ActEditCut
+      end
+      object MenuEditCopy: TMenuItem
+        Action = ActEditCopy
+      end
+      object MenuEditPaste: TMenuItem
+        Action = ActEditPaste
+      end
+      object MenuEditSep2: TMenuItem
+        Caption = '-'
+      end
+      object MenuEditFind: TMenuItem
+        Action = ActEditFind
+      end
+      object MenuEditReplace: TMenuItem
+        Action = ActEditReplace
+      end
+    end
+    object MenuRequest: TMenuItem
+      Caption = '&Request'
+      object MenuRequestRun: TMenuItem
+        Action = ActRequestRun
+      end
+      object MenuRequestRunAll: TMenuItem
+        Action = ActRequestRunAll
+      end
+      object MenuRequestStop: TMenuItem
+        Action = ActRequestStop
+      end
+      object MenuRequestSep1: TMenuItem
+        Caption = '-'
+      end
+      object MenuRequestNext: TMenuItem
+        Action = ActRequestNext
+      end
+      object MenuRequestPrev: TMenuItem
+        Action = ActRequestPrev
+      end
+    end
+    object MenuView: TMenuItem
+      Caption = '&View'
+      object MenuViewExplorer: TMenuItem
+        Action = ActViewExplorer
+      end
+      object MenuViewInspector: TMenuItem
+        Action = ActViewInspector
+      end
+      object MenuViewDebug: TMenuItem
+        Action = ActViewDebug
+      end
+      object MenuViewSep1: TMenuItem
+        Caption = '-'
+      end
+      object MenuViewReset: TMenuItem
+        Action = ActViewReset
+      end
+    end
+    object MenuTools: TMenuItem
+      Caption = '&Tools'
+      object MenuToolsEnv: TMenuItem
+        Action = ActToolsEnv
+      end
+      object MenuToolsDiag: TMenuItem
+        Action = ActToolsDiag
+      end
+      object MenuToolsSep1: TMenuItem
+        Caption = '-'
+      end
+      object MenuToolsPrefs: TMenuItem
+        Action = ActToolsPrefs
+      end
+    end
+    object MenuHelp: TMenuItem
+      Caption = '&Help'
+      object MenuHelpDocs: TMenuItem
+        Action = ActHelpDocs
+      end
+      object MenuHelpSep1: TMenuItem
+        Caption = '-'
+      end
+      object MenuHelpAbout: TMenuItem
+        Action = ActHelpAbout
+      end
+    end
+  end
+  object OpenDialog: TOpenDialog
+    Left = 300
+    Top = 100
+  end
+  object SaveDialog: TSaveDialog
+    Left = 400
+    Top = 100
+  end
+end

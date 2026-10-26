@@ -1,0 +1,201 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CONFIG>
+  <ProjectSession>
+    <PathDelim Value="\"/>
+    <Version Value="12"/>
+    <BuildModes Active="Default"/>
+    <Units>
+      <Unit>
+        <Filename Value="RestClient.lpr"/>
+        <IsPartOfProject Value="True"/>
+        <EditorIndex Value="-1"/>
+        <WindowIndex Value="-1"/>
+        <TopLine Value="-1"/>
+        <CursorPos X="-1" Y="-1"/>
+        <UsageCount Value="20"/>
+      </Unit>
+      <Unit>
+        <Filename Value="MainFormUnit.pas"/>
+        <IsPartOfProject Value="True"/>
+        <ComponentName Value="MainForm"/>
+        <HasResources Value="True"/>
+        <ResourceBaseClass Value="Form"/>
+        <EditorIndex Value="3"/>
+        <TopLine Value="217"/>
+        <CursorPos X="19" Y="221"/>
+        <UsageCount Value="20"/>
+        <Loaded Value="True"/>
+        <LoadedDesigner Value="True"/>
+      </Unit>
+      <Unit>
+        <Filename Value="HttpWorkspace.pas"/>
+        <IsPartOfProject Value="True"/>
+        <TopLine Value="675"/>
+        <CursorPos X="46" Y="678"/>
+        <UsageCount Value="20"/>
+        <Loaded Value="True"/>
+      </Unit>
+      <Unit>
+        <Filename Value="mainform.pas"/>
+        <ComponentName Value="MainForm"/>
+        <HasResources Value="True"/>
+        <ResourceBaseClass Value="Form"/>
+        <UnitName Value="MainForm"/>
+        <EditorIndex Value="-1"/>
+        <CursorPos X="27" Y="15"/>
+        <UsageCount Value="20"/>
+      </Unit>
+      <Unit>
+        <Filename Value="MainFormUnit.lfm"/>
+        <EditorIndex Value="-1"/>
+        <CursorPos X="17" Y="3"/>
+        <UsageCount Value="10"/>
+        <DefaultSyntaxHighlighter Value="LFM"/>
+      </Unit>
+      <Unit>
+        <Filename Value="C:\lazarus\components\virtualtreeview\laz.virtualtrees.pas"/>
+        <UnitName Value="laz.VirtualTrees"/>
+        <EditorIndex Value="2"/>
+        <TopLine Value="20568"/>
+        <CursorPos X="16" Y="20579"/>
+        <UsageCount Value="10"/>
+        <Loaded Value="True"/>
+      </Unit>
+      <Unit>
+        <Filename Value="libs\CurlRequestExecutor.pas"/>
+        <IsVisibleTab Value="True"/>
+        <EditorIndex Value="1"/>
+        <TopLine Value="168"/>
+        <CursorPos X="45" Y="173"/>
+        <UsageCount Value="10"/>
+        <Loaded Value="True"/>
+      </Unit>
+    </Units>
+    <JumpHistory HistoryIndex="29">
+      <Position>
+        <Filename Value="HttpWorkspace.pas"/>
+        <Caret Line="686" TopLine="674"/>
+      </Position>
+      <Position>
+        <Filename Value="HttpWorkspace.pas"/>
+        <Caret Line="692" TopLine="674"/>
+      </Position>
+      <Position>
+        <Filename Value="HttpWorkspace.pas"/>
+        <Caret Line="694" TopLine="675"/>
+      </Position>
+      <Position>
+        <Filename Value="HttpWorkspace.pas"/>
+        <Caret Line="697" TopLine="678"/>
+      </Position>
+      <Position>
+        <Filename Value="HttpWorkspace.pas"/>
+        <Caret Line="698" TopLine="680"/>
+      </Position>
+      <Position>
+        <Filename Value="HttpWorkspace.pas"/>
+        <Caret Line="702" TopLine="691"/>
+      </Position>
+      <Position>
+        <Filename Value="HttpWorkspace.pas"/>
+        <Caret Line="704" TopLine="691"/>
+      </Position>
+      <Position>
+        <Filename Value="HttpWorkspace.pas"/>
+        <Caret Line="686" TopLine="674"/>
+      </Position>
+      <Position>
+        <Filename Value="HttpWorkspace.pas"/>
+        <Caret Line="692" TopLine="674"/>
+      </Position>
+      <Position>
+        <Filename Value="HttpWorkspace.pas"/>
+        <Caret Line="694" TopLine="675"/>
+      </Position>
+      <Position>
+        <Filename Value="HttpWorkspace.pas"/>
+        <Caret Line="697" TopLine="678"/>
+      </Position>
+      <Position>
+        <Filename Value="HttpWorkspace.pas"/>
+        <Caret Line="698" TopLine="680"/>
+      </Position>
+      <Position>
+        <Filename Value="HttpWorkspace.pas"/>
+        <Caret Line="702" TopLine="691"/>
+      </Position>
+      <Position>
+        <Filename Value="HttpWorkspace.pas"/>
+        <Caret Line="704" TopLine="691"/>
+      </Position>
+      <Position>
+        <Filename Value="HttpWorkspace.pas"/>
+        <Caret Line="686" TopLine="674"/>
+      </Position>
+      <Position>
+        <Filename Value="HttpWorkspace.pas"/>
+        <Caret Line="692" TopLine="674"/>
+      </Position>
+      <Position>
+        <Filename Value="HttpWorkspace.pas"/>
+        <Caret Line="694" TopLine="675"/>
+      </Position>
+      <Position>
+        <Filename Value="HttpWorkspace.pas"/>
+        <Caret Line="697" TopLine="678"/>
+      </Position>
+      <Position>
+        <Filename Value="HttpWorkspace.pas"/>
+        <Caret Line="698" TopLine="680"/>
+      </Position>
+      <Position>
+        <Filename Value="HttpWorkspace.pas"/>
+        <Caret Line="702" TopLine="691"/>
+      </Position>
+      <Position>
+        <Filename Value="HttpWorkspace.pas"/>
+        <Caret Line="704" TopLine="691"/>
+      </Position>
+      <Position>
+        <Filename Value="HttpWorkspace.pas"/>
+        <Caret Line="686" TopLine="674"/>
+      </Position>
+      <Position>
+        <Filename Value="HttpWorkspace.pas"/>
+        <Caret Line="692" TopLine="674"/>
+      </Position>
+      <Position>
+        <Filename Value="HttpWorkspace.pas"/>
+        <Caret Line="694" TopLine="675"/>
+      </Position>
+      <Position>
+        <Filename Value="HttpWorkspace.pas"/>
+        <Caret Line="697" TopLine="678"/>
+      </Position>
+      <Position>
+        <Filename Value="HttpWorkspace.pas"/>
+        <Caret Line="698" TopLine="680"/>
+      </Position>
+      <Position>
+        <Filename Value="HttpWorkspace.pas"/>
+        <Caret Line="702" TopLine="691"/>
+      </Position>
+      <Position>
+        <Filename Value="HttpWorkspace.pas"/>
+        <Caret Line="686" TopLine="674"/>
+      </Position>
+      <Position>
+        <Filename Value="HttpWorkspace.pas"/>
+        <Caret Line="685" TopLine="674"/>
+      </Position>
+      <Position>
+        <Filename Value="HttpWorkspace.pas"/>
+        <Caret Line="678" Column="46" TopLine="675"/>
+      </Position>
+    </JumpHistory>
+    <RunParams>
+      <FormatVersion Value="2"/>
+      <Modes ActiveMode=""/>
+    </RunParams>
+  </ProjectSession>
+</CONFIG>
