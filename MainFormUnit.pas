@@ -43,6 +43,7 @@ type
     ActToolsPrefs: TAction;
     ActHelpDocs: TAction;
     ActHelpAbout: TAction;
+    ImageList: TImageList;
     
     // Dialogs
     OpenDialog: TOpenDialog;

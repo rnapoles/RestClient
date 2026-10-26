@@ -83,5 +83,7 @@ __recovery/
 
 # Custom
 build/out/
+backup/
+lib/
 
 sample.*
