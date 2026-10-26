@@ -1,9 +1,0 @@
-object MainForm: TMainForm
-  Left = 336
-  Height = 417
-  Top = 226
-  Width = 496
-  Caption = 'MainForm'
-  DesignTimePPI = 120
-  LCLVersion = '4.8.0.0'
-end

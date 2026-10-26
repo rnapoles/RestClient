@@ -380,10 +380,14 @@ begin
   ActEditReplace.Enabled := HasFile;
   
   // Request actions
-  ActRequestRun.Enabled := CanExecute and (Workspace.CurrentEndpointIndex >= 0);
+  // Run is enabled only when the editor cursor is inside an endpoint block.
+  // This ensures the button reflects exactly what WILL be executed and
+  // correctly goes dark when the cursor is in the variable section or
+  // between endpoints.
+  ActRequestRun.Enabled := CanExecute and (Workspace.GetEndpointIndexAtCursor >= 0);
   ActRequestRunAll.Enabled := CanExecute;
   ActRequestStop.Enabled := HasFile and Workspace.IsExecuting;
-  ActRequestNext.Enabled := CanExecute and 
+  ActRequestNext.Enabled := CanExecute and
     (Workspace.CurrentEndpointIndex < Length(Workspace.Parser.HttpFile.Endpoints) - 1);
   ActRequestPrev.Enabled := CanExecute and (Workspace.CurrentEndpointIndex > 0);
 end;
@@ -720,12 +724,15 @@ var
   Workspace: THttpWorkspace;
 begin
   Workspace := CurrentWorkspace;
-  if Assigned(Workspace) then
-  begin
-    // Re-parse before execution to ensure we have latest source
-    Workspace.Parse;
-    Workspace.ExecuteCurrentRequest;
-  end;
+  if not Assigned(Workspace) then
+    Exit;
+
+  // Re-parse before execution to ensure we have the latest source.
+  Workspace.Parse;
+
+  // ExecuteCurrentRequest will automatically use the current cursor position
+  // in FEditor to determine which endpoint to run.
+  Workspace.ExecuteCurrentRequest;
 end;
 
 procedure TMainForm.ActRequestRunAllExecute(Sender: TObject);

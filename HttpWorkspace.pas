@@ -112,6 +112,7 @@ type
     procedure ExecuteCurrentRequest;
     procedure ExecuteAllRequests;
     procedure StopExecution;
+    function GetEndpointIndexAtCursor: Integer; // -1 if cursor is not inside any endpoint
     
     procedure ShowExplorer(AVisible: Boolean);
     procedure ShowInspector(AVisible: Boolean);
@@ -572,29 +573,107 @@ begin
   end;
 end;
 
+function THttpWorkspace.GetEndpointIndexAtCursor: Integer;
+var
+  CursorLine, ScanLine, I: Integer;
+  LineText: string;
+begin
+  Result := -1;
+  if not Assigned(FParser) or not Assigned(FParser.HttpFile) then
+    Exit;
+  if Length(FParser.HttpFile.Endpoints) = 0 then
+    Exit;
+
+  CursorLine := FEditor.CaretY; // 1-based
+
+  // Scan upward from the cursor line to identify which endpoint block we are in.
+  //
+  // Endpoint.Row points to the HTTP verb line (e.g. "GET https://...").
+  // The optional "### Name" separator and name-comment lines that INTRODUCE
+  // an endpoint appear ABOVE its verb line, so a plain "Row <= cursor" test
+  // incorrectly attributes those lines to the previous endpoint.
+  //
+  // Upward scan rules:
+  //   - Hit a verb line (exact Row match) → cursor is in that endpoint's
+  //     headers / body area → return that index.
+  //   - Hit a "###" separator line → cursor is in the intro block of the
+  //     next endpoint that follows the separator → return that index.
+  //   - Reach line 1 without a match → cursor is before all endpoints (e.g.
+  //     inside variable declarations) → return -1.
+  ScanLine := CursorLine;
+  while ScanLine >= 1 do
+  begin
+    // Resolve line text (Lines[] is 0-indexed)
+    if ScanLine <= FEditor.Lines.Count then
+      LineText := FEditor.Lines[ScanLine - 1]
+    else
+      LineText := '';
+
+    // Check whether this line is the verb line of any known endpoint
+    for I := 0 to High(FParser.HttpFile.Endpoints) do
+    begin
+      if FParser.HttpFile.Endpoints[I].Row = ScanLine then
+      begin
+        Result := I;
+        Exit;
+      end;
+    end;
+
+    // Check whether this line is a "###" request-separator
+    if (Length(LineText) >= 3) and (Copy(LineText, 1, 3) = '###') then
+    begin
+      // The separator introduces the first endpoint whose verb line comes
+      // after this separator.
+      for I := 0 to High(FParser.HttpFile.Endpoints) do
+      begin
+        if FParser.HttpFile.Endpoints[I].Row > ScanLine then
+        begin
+          Result := I;
+          Exit;
+        end;
+      end;
+      // Separator with no endpoint below it
+      Exit; // Result stays -1
+    end;
+
+    Dec(ScanLine);
+  end;
+  // Reached top of file with no endpoint or separator found
+end;
+
 procedure THttpWorkspace.ExecuteCurrentRequest;
 var
   Endpoint: TEndpoint;
+  IdxAtCursor: Integer;
 begin
   if not Assigned(FParser) or not Assigned(FExecutor) then
   begin
     AddDebugMessage('Parser or executor not initialized', hsError);
     Exit;
   end;
-  
-  if (FCurrentEndpointIndex < 0) or (FCurrentEndpointIndex >= Length(FParser.HttpFile.Endpoints)) then
+
+  // ALWAYS use the current cursor position in FEditor to determine which endpoint to run.
+  // This ensures that the request under the cursor is executed, regardless of any
+  // previously selected endpoint from the tree view.
+  IdxAtCursor := GetEndpointIndexAtCursor;
+  if IdxAtCursor < 0 then
   begin
-    AddDebugMessage('No request selected', hsWarning);
+    AddDebugMessage(Format('Cursor at line %d is not inside any endpoint', [FEditor.CaretY]), hsWarning);
     Exit;
   end;
-  
+
+  // Update the current endpoint index based on cursor position
+  FCurrentEndpointIndex := IdxAtCursor;
+  AddDebugMessage(Format('Executing endpoint at cursor line %d (index %d)',
+    [FEditor.CaretY, FCurrentEndpointIndex]), hsInfo);
+
   FIsExecuting := True;
   try
     Endpoint := FParser.HttpFile.Endpoints[FCurrentEndpointIndex];
     AddDebugMessage(Format('Executing request: %s %s', [Endpoint.Verb, Endpoint.Url]), hsInfo);
-    
+
     FExecutor.ExecuteAt(FCurrentEndpointIndex);
-    
+
   except
     on E: Exception do
     begin
