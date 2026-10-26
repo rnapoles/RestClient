@@ -315,7 +315,7 @@ begin
   
   // HTTP file syntax highlighter
   FHighlighter := TSynHttpSyn.Create(Self);
-  //FEditor.Highlighter := FHighlighter;
+  FEditor.Highlighter := FHighlighter;
 end;
 
 procedure THttpWorkspace.SetupInspector;

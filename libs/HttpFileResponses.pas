@@ -54,6 +54,8 @@ type
     function Put(const ARequestName: string): THttpResponse;
     function Find(const ARequestName: string): THttpResponse; // nil when unknown
     procedure Clear;
+    { copies all entries from ASource into Self, overwriting any with the same name }
+    procedure CopyFrom(ASource: THttpResponseStore);
   end;
 
 { copies the stored response of every named endpoint into the endpoint }
@@ -158,6 +160,18 @@ end;
 procedure THttpResponseStore.Clear;
 begin
   FResponses.Clear;
+end;
+
+procedure THttpResponseStore.CopyFrom(ASource: THttpResponseStore);
+var
+  I: Integer;
+  Dst: THttpResponse;
+begin
+  for I := 0 to ASource.FResponses.Count - 1 do
+  begin
+    Dst := Put(ASource.FResponses[I]);
+    Dst.Assign(THttpResponse(ASource.FResponses.Objects[I]));
+  end;
 end;
 
 procedure BindResponsesToEndpoints(AFile: THttpFile; AStore: THttpResponseStore);

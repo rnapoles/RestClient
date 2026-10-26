@@ -12,7 +12,7 @@
         <WindowIndex Value="-1"/>
         <TopLine Value="-1"/>
         <CursorPos X="-1" Y="-1"/>
-        <UsageCount Value="25"/>
+        <UsageCount Value="27"/>
       </Unit>
       <Unit>
         <Filename Value="MainFormUnit.pas"/>
@@ -20,19 +20,20 @@
         <ComponentName Value="MainForm"/>
         <HasResources Value="True"/>
         <ResourceBaseClass Value="Form"/>
-        <TopLine Value="714"/>
-        <CursorPos X="20" Y="726"/>
-        <UsageCount Value="25"/>
+        <TopLine Value="709"/>
+        <CursorPos Y="726"/>
+        <UsageCount Value="27"/>
         <Loaded Value="True"/>
         <LoadedDesigner Value="True"/>
       </Unit>
       <Unit>
         <Filename Value="HttpWorkspace.pas"/>
         <IsPartOfProject Value="True"/>
+        <IsVisibleTab Value="True"/>
         <EditorIndex Value="1"/>
-        <TopLine Value="520"/>
-        <CursorPos X="17" Y="495"/>
-        <UsageCount Value="25"/>
+        <TopLine Value="495"/>
+        <CursorPos X="22" Y="511"/>
+        <UsageCount Value="27"/>
         <Loaded Value="True"/>
       </Unit>
       <Unit>
@@ -41,7 +42,7 @@
         <EditorIndex Value="3"/>
         <TopLine Value="184"/>
         <CursorPos X="17" Y="184"/>
-        <UsageCount Value="22"/>
+        <UsageCount Value="24"/>
         <Loaded Value="True"/>
       </Unit>
       <Unit>
@@ -86,134 +87,143 @@
       </Unit>
       <Unit>
         <Filename Value="libs\HttpFileExecutor.pas"/>
-        <IsVisibleTab Value="True"/>
         <EditorIndex Value="2"/>
-        <TopLine Value="175"/>
-        <CursorPos Y="200"/>
+        <TopLine Value="87"/>
+        <CursorPos X="19" Y="114"/>
         <UsageCount Value="11"/>
         <Loaded Value="True"/>
       </Unit>
+      <Unit>
+        <Filename Value="libs\HttpFileParser.pas"/>
+        <EditorIndex Value="-1"/>
+        <TopLine Value="77"/>
+        <CursorPos X="23" Y="91"/>
+        <UsageCount Value="10"/>
+      </Unit>
+      <Unit>
+        <Filename Value="libs\HttpFileLexer.pas"/>
+        <EditorIndex Value="-1"/>
+        <TopLine Value="19"/>
+        <CursorPos X="3" Y="33"/>
+        <UsageCount Value="10"/>
+      </Unit>
     </Units>
-    <JumpHistory HistoryIndex="29">
+    <JumpHistory HistoryIndex="28">
       <Position>
         <Filename Value="HttpWorkspace.pas"/>
-        <Caret Line="488" Column="31" TopLine="483"/>
-      </Position>
-      <Position>
-        <Filename Value="HttpWorkspace.pas"/>
-        <Caret Line="513" Column="18" TopLine="481"/>
+        <Caret Line="698" Column="36" TopLine="676"/>
       </Position>
       <Position>
         <Filename Value="HttpWorkspace.pas"/>
-        <Caret Line="768" Column="44" TopLine="736"/>
+        <Caret Line="703" Column="34" TopLine="681"/>
       </Position>
       <Position>
         <Filename Value="HttpWorkspace.pas"/>
-        <Caret Line="488" Column="31" TopLine="478"/>
+        <Caret Line="709" Column="50" TopLine="687"/>
       </Position>
       <Position>
-        <Filename Value="MainFormUnit.pas"/>
-        <Caret Line="435" Column="40" TopLine="425"/>
+        <Filename Value="HttpWorkspace.pas"/>
+        <Caret Line="710" Column="33" TopLine="688"/>
       </Position>
       <Position>
-        <Filename Value="MainFormUnit.pas"/>
-        <Caret Line="726" Column="20" TopLine="710"/>
+        <Filename Value="HttpWorkspace.pas"/>
+        <Caret Line="711" Column="33" TopLine="689"/>
       </Position>
       <Position>
-        <Filename Value="MainFormUnit.pas"/>
-        <Caret Line="738" Column="20" TopLine="722"/>
+        <Filename Value="HttpWorkspace.pas"/>
+        <Caret Line="729" Column="73" TopLine="706"/>
       </Position>
       <Position>
-        <Filename Value="MainFormUnit.pas"/>
-        <Caret Line="757" Column="54" TopLine="741"/>
+        <Filename Value="HttpWorkspace.pas"/>
+        <Caret Line="735" Column="33" TopLine="715"/>
       </Position>
       <Position>
-        <Filename Value="MainFormUnit.pas"/>
-        <Caret Line="759" Column="63" TopLine="743"/>
+        <Filename Value="HttpWorkspace.pas"/>
+        <Caret Line="736" Column="15" TopLine="715"/>
       </Position>
       <Position>
-        <Filename Value="MainFormUnit.pas"/>
-        <Caret Line="772" Column="54" TopLine="756"/>
+        <Filename Value="HttpWorkspace.pas"/>
+        <Caret Line="737" Column="50" TopLine="715"/>
       </Position>
       <Position>
-        <Filename Value="MainFormUnit.pas"/>
-        <Caret Line="862" Column="54" TopLine="846"/>
+        <Filename Value="HttpWorkspace.pas"/>
+        <Caret Line="768" Column="38" TopLine="746"/>
       </Position>
       <Position>
-        <Filename Value="MainFormUnit.pas"/>
-        <Caret Line="869" Column="30" TopLine="853"/>
+        <Filename Value="HttpWorkspace.pas"/>
+        <Caret Line="776" Column="57" TopLine="754"/>
       </Position>
       <Position>
-        <Filename Value="MainFormUnit.pas"/>
-        <Caret Line="870" Column="30" TopLine="854"/>
+        <Filename Value="HttpWorkspace.pas"/>
+        <Caret Line="782" Column="63" TopLine="760"/>
       </Position>
       <Position>
-        <Filename Value="MainFormUnit.pas"/>
-        <Caret Line="871" Column="23" TopLine="855"/>
+        <Filename Value="HttpWorkspace.pas"/>
+        <Caret Line="789" Column="28" TopLine="767"/>
       </Position>
       <Position>
-        <Filename Value="MainFormUnit.pas"/>
-        <Caret Line="872" Column="23" TopLine="856"/>
+        <Filename Value="HttpWorkspace.pas"/>
+        <Caret Line="812" Column="57" TopLine="790"/>
       </Position>
       <Position>
-        <Filename Value="MainFormUnit.pas"/>
-        <Caret Line="364" Column="53" TopLine="354"/>
+        <Filename Value="HttpWorkspace.pas"/>
+        <Caret Line="818" Column="56" TopLine="796"/>
       </Position>
       <Position>
-        <Filename Value="MainFormUnit.pas"/>
-        <Caret Line="365" Column="28" TopLine="354"/>
+        <Filename Value="HttpWorkspace.pas"/>
+        <Caret Line="824" Column="23" TopLine="802"/>
       </Position>
       <Position>
-        <Filename Value="MainFormUnit.pas"/>
-        <Caret Line="387" Column="61" TopLine="380"/>
+        <Filename Value="HttpWorkspace.pas"/>
+        <Caret Line="847" Column="67" TopLine="824"/>
       </Position>
       <Position>
-        <Filename Value="MainFormUnit.pas"/>
-        <Caret Line="412" Column="37" TopLine="396"/>
+        <Filename Value="HttpWorkspace.pas"/>
+        <Caret Line="848" Column="60" TopLine="825"/>
       </Position>
       <Position>
-        <Filename Value="MainFormUnit.pas"/>
-        <Caret Line="414" Column="68" TopLine="398"/>
+        <Filename Value="HttpWorkspace.pas"/>
+        <Caret Line="850" Column="26" TopLine="827"/>
       </Position>
       <Position>
-        <Filename Value="MainFormUnit.pas"/>
-        <Caret Line="415" Column="25" TopLine="399"/>
+        <Filename Value="HttpWorkspace.pas"/>
+        <Caret Line="860" Column="67" TopLine="838"/>
       </Position>
       <Position>
-        <Filename Value="MainFormUnit.pas"/>
-        <Caret Line="416" Column="76" TopLine="400"/>
+        <Filename Value="HttpWorkspace.pas"/>
+        <Caret Line="861" Column="53" TopLine="839"/>
       </Position>
       <Position>
-        <Filename Value="MainFormUnit.pas"/>
-        <Caret Line="718" Column="41" TopLine="710"/>
+        <Filename Value="HttpWorkspace.pas"/>
+        <Caret Line="863" Column="29" TopLine="841"/>
       </Position>
       <Position>
-        <Filename Value="MainFormUnit.pas"/>
-        <Caret Line="141" Column="35" TopLine="132"/>
+        <Filename Value="HttpWorkspace.pas"/>
+        <Caret Line="949" Column="78" TopLine="927"/>
       </Position>
       <Position>
-        <Filename Value="MainFormUnit.pas"/>
-        <Caret Line="718" Column="41" TopLine="702"/>
+        <Filename Value="HttpWorkspace.pas"/>
+        <Caret Line="951" Column="24" TopLine="929"/>
       </Position>
       <Position>
-        <Filename Value="MainFormUnit.pas"/>
-        <Caret Line="141" Column="35" TopLine="132"/>
+        <Filename Value="HttpWorkspace.pas"/>
+        <Caret Line="23" Column="12" TopLine="8"/>
       </Position>
       <Position>
-        <Filename Value="MainFormUnit.pas"/>
-        <Caret Line="718" Column="41" TopLine="711"/>
+        <Filename Value="HttpWorkspace.pas"/>
+        <Caret Line="122" Column="50" TopLine="100"/>
       </Position>
       <Position>
-        <Filename Value="MainFormUnit.pas"/>
-        <Caret Line="726" Column="20" TopLine="714"/>
+        <Filename Value="HttpWorkspace.pas"/>
+        <Caret Line="179" Column="10" TopLine="168"/>
       </Position>
       <Position>
-        <Filename Value="libs\HttpFileExecutor.pas"/>
-        <Caret Line="182" TopLine="172"/>
+        <Filename Value="HttpWorkspace.pas"/>
+        <Caret Line="499" Column="23" TopLine="485"/>
       </Position>
       <Position>
-        <Filename Value="libs\HttpFileExecutor.pas"/>
-        <Caret Line="200" Column="40" TopLine="191"/>
+        <Filename Value="HttpWorkspace.pas"/>
+        <Caret Line="503" Column="22" TopLine="495"/>
       </Position>
     </JumpHistory>
     <RunParams>

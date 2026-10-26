@@ -490,17 +490,34 @@ var
   BaseDir: string;
   I: Integer;
   Err: THttpParseError;
+  SavedResponses: THttpResponseStore;
 begin
   AddDebugMessage('Parsing HTTP file...', hsInfo);
   
   try
+    // Preserve previously stored responses so that response references
+    // (e.g. login.response.headers.X-AuthToken) keep resolving after a re-parse.
+    SavedResponses := nil;
+    if Assigned(FParser) then
+    begin
+      SavedResponses := THttpResponseStore.Create;
+      SavedResponses.CopyFrom(FParser.Responses);
+    end;
+
     // Free existing parser and executor
     FreeAndNil(FExecutor);
     FreeAndNil(FParser);
-    
+
     // Create new parser
     FParser := THttpFileParser.Create(FEditor.Lines.Text);
-    
+
+    // Restore responses into the new parser before parsing
+    if Assigned(SavedResponses) then
+    begin
+      FParser.Responses.CopyFrom(SavedResponses);
+      FreeAndNil(SavedResponses);
+    end;
+
     // Set base directory if file has been saved
     if FFilePath <> '' then
     begin
@@ -547,6 +564,7 @@ begin
   except
     on E: Exception do
     begin
+      FreeAndNil(SavedResponses);
       AddDebugMessage('Parse failed: ' + E.Message, hsError);
       if Assigned(FOnError) then
         FOnError(Self, 'Parse failed: ' + E.Message);
