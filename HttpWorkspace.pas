@@ -928,6 +928,8 @@ procedure THttpWorkspace.TreeViewChange(Sender: TBaseVirtualTree; Node: PVirtual
 var
   Data: PTreeNodeData;
   Endpoint: TEndpoint;
+  I: Integer;
+  StatusColor: TColor;
 begin
   if Node = nil then
     Exit;
@@ -946,7 +948,74 @@ begin
     begin
       Endpoint := FParser.HttpFile.Endpoints[Data^.Index];
       if Assigned(Endpoint) then
+      begin
         NavigateToLine(Endpoint.Row);
+        
+        // Update inspector panels with endpoint data
+        // REQUEST TAB - Show the request details
+        FRequestEditor.Lines.Clear;
+        FRequestEditor.Lines.Add(Format('%s %s %s', [Endpoint.Verb, Endpoint.RawUrl, Endpoint.HttpRevision]));
+        
+        // Add request headers
+        if Length(Endpoint.RequestHeaders) > 0 then
+        begin
+          for I := 0 to High(Endpoint.RequestHeaders) do
+            FRequestEditor.Lines.Add(Format('%s: %s', [Endpoint.RequestHeaders[I].Name, Endpoint.RequestHeaders[I].Value]));
+        end;
+        
+        // Add request body
+        if Endpoint.RawRequestBody <> '' then
+        begin
+          FRequestEditor.Lines.Add('');
+          FRequestEditor.Lines.Add(Endpoint.RawRequestBody);
+        end
+        else if Endpoint.BodyFilePath <> '' then
+        begin
+          FRequestEditor.Lines.Add('');
+          FRequestEditor.Lines.Add('< ' + Endpoint.BodyFilePath);
+        end;
+        
+        // RESPONSE TAB - Show stored response if available
+        if Endpoint.ResponseStatusCode > 0 then
+        begin
+          FResponseEditor.Lines.Text := Endpoint.ResponseBody;
+          
+          // Update status panel
+          FStatusLabel.Caption := Format('  %d %s', [Endpoint.ResponseStatusCode, Endpoint.ResponseStatusText]);
+          if (Endpoint.ResponseStatusCode >= 200) and (Endpoint.ResponseStatusCode < 300) then
+            StatusColor := COLOR_SUCCESS
+          else if Endpoint.ResponseStatusCode >= 400 then
+            StatusColor := COLOR_ERROR
+          else
+            StatusColor := COLOR_WARNING;
+          FStatusLabel.Font.Color := StatusColor;
+          FResponseStatus.Visible := True;
+        end
+        else
+        begin
+          FResponseEditor.Lines.Clear;
+          FResponseEditor.Lines.Add('(No response stored for this request)');
+          FResponseStatus.Visible := False;
+        end;
+        
+        // HEADERS TAB - Show response headers if available
+        FHeadersEditor.Lines.Clear;
+        if Endpoint.ResponseStatusCode > 0 then
+        begin
+          FHeadersEditor.Lines.Add(Format('%s %d %s', [Endpoint.HttpRevision, Endpoint.ResponseStatusCode, Endpoint.ResponseStatusText]));
+          FHeadersEditor.Lines.Add('');
+          
+          if Length(Endpoint.ResponseHeaders) > 0 then
+          begin
+            for I := 0 to High(Endpoint.ResponseHeaders) do
+              FHeadersEditor.Lines.Add(Format('%s: %s', [Endpoint.ResponseHeaders[I].Name, Endpoint.ResponseHeaders[I].Value]));
+          end;
+        end
+        else
+        begin
+          FHeadersEditor.Lines.Add('(No response headers stored for this request)');
+        end;
+      end;
     end;
     
     if Assigned(FOnStatusChanged) then
