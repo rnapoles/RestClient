@@ -273,7 +273,7 @@ begin
   FTreeView.TreeOptions.PaintOptions := FTreeView.TreeOptions.PaintOptions + [toShowRoot];
   FTreeView.TreeOptions.SelectionOptions := FTreeView.TreeOptions.SelectionOptions + [toFullRowSelect];
   FTreeView.NodeDataSize := SizeOf(TTreeNodeData);
-  
+
   FTreeView.OnGetText := @TreeViewGetText;
   FTreeView.OnChange := @TreeViewChange;
   FTreeView.OnDblClick := @TreeViewDblClick;
@@ -526,14 +526,14 @@ begin
       FParser.BaseDirectory := BaseDir;
       AddDebugMessage('Base directory: ' + BaseDir, hsInfo);
     end;
-    
+
     // Parse
     FParser.Parse;
-    
+
     // Create executor
     FExecutor := TCurlRequestExecutor.Create(FParser);
     FExecutor.OnExecuted := @OnRequestExecuted;
-    
+
     // Report results
     if FParser.Errors.ErrorCount > 0 then
       AddDebugMessage(Format('Parse completed with %d error(s), %d warning(s)',
@@ -544,7 +544,7 @@ begin
     else
       AddDebugMessage(Format('Parse completed successfully. Found %d request(s), %d variable(s)',
         [Length(FParser.HttpFile.Endpoints), Length(FParser.HttpFile.Variables)]), hsInfo);
-    
+
     // Log parse errors
     if FParser.Errors.Count > 0 then
     begin
@@ -740,18 +740,17 @@ begin
 end;
 
 procedure THttpWorkspace.RebuildTree;
-var
-  RootNode: PVirtualNode;
 begin
   FTreeView.BeginUpdate;
   try
     FTreeView.Clear;
-    
+
     if Assigned(FParser) and Assigned(FParser.HttpFile) then
     begin
       // Calculate child count: variables + endpoints + errors
       FTreeView.RootNodeCount := 1; // One root node
     end;
+    FTreeView.FullExpand();
   finally
     FTreeView.EndUpdate;
   end;
